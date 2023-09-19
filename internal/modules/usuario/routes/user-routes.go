@@ -6,11 +6,9 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-var createUserController create_user.CreateUserController
-
 func UserRoutes(r *gin.Engine) {
 	userRoutes := r.Group("/user")
 	{
-		userRoutes.POST("/", createUserController.Execute)
+		userRoutes.POST("/", create_user.CreateUserController)
 	}
 }

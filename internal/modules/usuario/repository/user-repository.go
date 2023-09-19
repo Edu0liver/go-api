@@ -2,15 +2,25 @@ package user_repository
 
 import (
 	"go-api/internal/modules/usuario/entity"
+	"go-api/internal/shared/database"
 
 	"gorm.io/gorm"
 )
 
-type UserRepository struct {
-	db *gorm.DB
+// type UserRepository interface {
+// 	Create(user *entity.User) (*entity.User, error)
+// }
+
+type UserRepositoryDb struct {
+	Db *gorm.DB
 }
 
-func (userRepository *UserRepository) Create(user *entity.User) *entity.User {
-	userRepository.db.Create(user)
-	return user
+func UserRepositoryCreate(user *entity.User) (*entity.User, error) {
+	err := database.Db.Create(user).Error
+
+	if err != nil {
+		return nil, err
+	}
+
+	return user, nil
 }

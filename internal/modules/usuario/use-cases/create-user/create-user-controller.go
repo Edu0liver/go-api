@@ -1,25 +1,36 @@
 package create_user
 
 import (
+	"fmt"
 	"go-api/internal/modules/usuario/entity"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
 )
 
-type CreateUserController struct {
-	createUserService *CreateUserService
+type CreateUserRequest struct {
+	Name     string
+	Email    string
+	Password string
 }
 
-func (createUserontroller *CreateUserController) Execute(c *gin.Context) {
-	var user entity.User
+func CreateUserController(c *gin.Context) {
+	body := CreateUserRequest{}
 
-	if err := c.ShouldBindJSON(&user); err != nil {
+	if err := c.BindJSON(&body); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	if user, err := createUserontroller.createUserService.Execute(&user); err != nil {
+	fmt.Println(body)
+
+	user := entity.User{
+		Name:     body.Name,
+		Email:    body.Email,
+		Password: body.Password,
+	}
+
+	if user, err := CreateUserService(&user); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	} else {
