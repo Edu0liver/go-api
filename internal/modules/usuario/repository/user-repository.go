@@ -7,15 +7,11 @@ import (
 	"gorm.io/gorm"
 )
 
-// type UserRepository interface {
-// 	Create(user *entity.User) (*entity.User, error)
-// }
-
 type UserRepositoryDb struct {
 	Db *gorm.DB
 }
 
-func UserRepositoryCreate(user *entity.User) (*entity.User, error) {
+func CreateUser(user *entity.User) (*entity.User, error) {
 	err := database.Db.Create(user).Error
 
 	if err != nil {
@@ -23,4 +19,16 @@ func UserRepositoryCreate(user *entity.User) (*entity.User, error) {
 	}
 
 	return user, nil
+}
+
+func ListAllUsers() (*[]entity.User, error) {
+	var users []entity.User
+
+	err := database.Db.Find(&users).Error
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &users, nil
 }

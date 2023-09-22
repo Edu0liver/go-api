@@ -20,7 +20,7 @@ func CreateUserService(user *entity.User) (*entity.User, error) {
 	uuid := uuid.New()
 	user.Id = uuid.String()
 
-	if user, err := user_repository.UserRepositoryCreate(user); err != nil {
+	if user, err := user_repository.CreateUser(user); err != nil {
 		return nil, err
 	} else {
 		return user, nil
