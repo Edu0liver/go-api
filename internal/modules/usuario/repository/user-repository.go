@@ -32,3 +32,11 @@ func ListAllUsers() (*[]entity.User, error) {
 
 	return &users, nil
 }
+
+func GetUserByEmail(email *string) *entity.User {
+	var user entity.User
+
+	database.Db.Where("email = ?", email).First(&user)
+
+	return &user
+}
