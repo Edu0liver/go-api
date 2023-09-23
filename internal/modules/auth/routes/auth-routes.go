@@ -1,4 +1,4 @@
-package user_routes
+package auth_routes
 
 import (
 	"go-api/internal/modules/auth/use-cases/login"
