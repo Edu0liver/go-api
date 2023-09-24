@@ -3,16 +3,10 @@ package user_repository
 import (
 	"go-api/internal/modules/usuario/entity"
 	"go-api/internal/shared/database"
-
-	"gorm.io/gorm"
 )
 
-type UserRepositoryDb struct {
-	Db *gorm.DB
-}
-
 func CreateUser(user *entity.User) (*entity.User, error) {
-	err := database.Db.Create(user).Error
+	err := database.DB.Create(user).Error
 
 	if err != nil {
 		return nil, err
@@ -24,7 +18,7 @@ func CreateUser(user *entity.User) (*entity.User, error) {
 func ListAllUsers() (*[]entity.User, error) {
 	var users []entity.User
 
-	err := database.Db.Find(&users).Error
+	err := database.DB.Find(&users).Error
 
 	if err != nil {
 		return nil, err
@@ -36,7 +30,7 @@ func ListAllUsers() (*[]entity.User, error) {
 func GetUserByEmail(email *string) *entity.User {
 	var user entity.User
 
-	database.Db.Where("email = ?", email).First(&user)
+	database.DB.Where("email = ?", email).First(&user)
 
 	return &user
 }

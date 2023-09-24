@@ -1,30 +1,23 @@
 package database
 
 import (
-	"go-api/internal/modules/usuario/entity"
+	"os"
 
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
 
-type Database struct {
-	db *gorm.DB
-}
+var DB *gorm.DB
 
-func (database *Database) InitDatabase() *gorm.DB {
+func InitDatabase() {
 
-	dsn := "host=localhost user=docker password=docker dbname=postgres port=5432 sslmode=disable TimeZone=America/Fortaleza"
-	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
+	dsn := os.Getenv("DB_CONNNECTION")
+	ok_db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
+
+	DB = ok_db
 
 	if err != nil {
 		panic("Failed to connect to database!")
 	}
 
-	database.db = db
-
-	db.AutoMigrate(&entity.User{})
-
-	return db
 }
-
-var Db = new(Database).InitDatabase()
