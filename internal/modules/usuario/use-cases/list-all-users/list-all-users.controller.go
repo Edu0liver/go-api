@@ -7,10 +7,12 @@ import (
 )
 
 func ListAllUsersController(c *gin.Context) {
-	if user, err := ListAllUsersService(); err != nil {
+	user, err := ListAllUsersService()
+
+	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
-	} else {
-		c.JSON(http.StatusCreated, gin.H{"user": user})
 	}
+
+	c.JSON(http.StatusCreated, gin.H{"user": user})
 }

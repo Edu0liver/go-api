@@ -4,34 +4,39 @@ import (
 	"errors"
 	login "go-api/internal/modules/auth/use-cases/login/dtos"
 	user_repository "go-api/internal/modules/usuario/repository"
-	jwt_provider "go-api/internal/shared/providers/jwt/dtos"
-	jwt "go-api/internal/shared/providers/jwt/services"
+	"os"
+	"time"
 
+	jwt "github.com/golang-jwt/jwt/v5"
 	"golang.org/x/crypto/bcrypt"
 )
 
 func LoginService(data *login.LoginDto) (string, error) {
 	user := user_repository.GetUserByEmail(&data.Email)
 
-	if user == nil {
-		return "", errors.New("User not found")
+	if user.Id == "" {
+		return "", errors.ErrUnsupported
 	}
 
-	isPasswordCorrect := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(data.Password))
-
-	if isPasswordCorrect != nil {
-		return "", isPasswordCorrect
-	}
-
-	payload := jwt_provider.JwtPayload{
-		Email: user.Email,
-	}
-
-	token, err := jwt.GenerateToken(payload)
+	err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(data.Password))
 
 	if err != nil {
 		return "", err
 	}
 
-	return token, nil
+	payload := jwt.MapClaims{
+		"Id":    user.Id,
+		"Email": user.Email,
+		"nbf":   time.Now().Unix(),
+	}
+
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, payload)
+
+	tokenString, err := token.SignedString([]byte(os.Getenv("JWT_SECRET")))
+
+	if err != nil {
+		return "", err
+	}
+
+	return tokenString, nil
 }

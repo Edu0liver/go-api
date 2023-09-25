@@ -12,11 +12,19 @@ func LoginController(c *gin.Context) {
 
 	if err := c.BindJSON(&dto); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
 	}
 
-	if token, err := LoginService(&dto); err != nil {
+	token, err := LoginService(&dto)
+
+	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-	} else {
-		c.JSON(http.StatusCreated, gin.H{"token": token})
+		return
 	}
+
+	c.SetSameSite(http.SameSiteLaxMode)
+	c.SetCookie("Authorization", token, 3600*24, "", "", false, true)
+	c.Set("Authorization", token)
+
+	c.JSON(http.StatusCreated, gin.H{"token": token})
 }
