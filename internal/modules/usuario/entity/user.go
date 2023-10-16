@@ -1,7 +1,6 @@
 package entity
 
 import (
-	"fmt"
 	"time"
 )
 
@@ -13,14 +12,4 @@ type User struct {
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`
 	DeletedAt time.Time `json:"deleted_at"`
-}
-
-func (user *User) String() {
-	fmt.Println("Id: ", user.Id)
-
-	fmt.Println("Name: ", user.Name)
-
-	fmt.Println("Email: ", user.Email)
-
-	fmt.Println("Password: ", user.Password)
 }

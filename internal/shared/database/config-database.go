@@ -1,15 +1,19 @@
 package database
 
 import (
+	"go-api/internal/shared/logger"
 	"os"
 
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
 
-var DB *gorm.DB
+var (
+	DB *gorm.DB
+)
 
 func InitDatabase() {
+	log := logger.GetLogger("Init Database")
 
 	dsn := os.Getenv("DB_CONNNECTION")
 	ok_db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
@@ -17,7 +21,7 @@ func InitDatabase() {
 	DB = ok_db
 
 	if err != nil {
-		panic("Failed to connect to database!")
+		log.Errorf("Failed to connect to database: %v", err)
 	}
 
 }

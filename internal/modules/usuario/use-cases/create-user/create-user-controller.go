@@ -1,7 +1,6 @@
 package create_user
 
 import (
-	"fmt"
 	"go-api/internal/modules/usuario/entity"
 	"net/http"
 
@@ -21,8 +20,6 @@ func CreateUserController(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-
-	fmt.Println(body)
 
 	user := entity.User{
 		Name:     body.Name,

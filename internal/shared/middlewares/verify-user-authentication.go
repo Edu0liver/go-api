@@ -3,6 +3,7 @@ package middlware
 import (
 	"fmt"
 	"go-api/internal/modules/usuario/entity"
+	logger_config "go-api/internal/shared/logger"
 	"os"
 	"time"
 
@@ -12,6 +13,7 @@ import (
 
 func VerifyUserAuthenticationMiddleware(c *gin.Context) {
 	tokenString, err := c.Cookie("Authorization")
+	logger := logger_config.GetLogger("VerifyUserAuthenticationMiddleware")
 
 	if err != nil {
 		c.JSON(401, gin.H{"error": "Token not found"})
@@ -42,8 +44,8 @@ func VerifyUserAuthenticationMiddleware(c *gin.Context) {
 
 		c.Next()
 
-		fmt.Println(claims["Id"], claims["Email"], claims["nbf"])
+		logger.Info(claims["Id"], claims["Email"], claims["nbf"])
 	} else {
-		fmt.Println(err)
+		logger.Error(err)
 	}
 }
